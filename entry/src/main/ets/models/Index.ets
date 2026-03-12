@@ -1,4 +1,3 @@
-
 export interface TabType {
   icon: Resource;	// 页签的图标
   text: string;		// 页签的文本
