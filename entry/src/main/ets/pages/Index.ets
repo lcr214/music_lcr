@@ -27,8 +27,6 @@ struct Index {
       this.isActive = this.tabData[index].name;
     })
   }
-
-
   @Builder
   tabBarBuilder(item: TabType) {
     Column({ space: 5 }) {
