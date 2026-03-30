@@ -24,6 +24,7 @@ export default struct Mine {
       // 背景
       Column() {
         GridRow({
+          breakpoints: { value: ['100vp'] },//仅一个断点，保证所有屏幕都是四列
           columns: 4,
           gutter: {x:9, y:9}  //项之间的横向 /纵向间距
 
@@ -36,7 +37,7 @@ export default struct Mine {
           })
         }
       }
-      .scale({ x: 1.15, y: 1.15, centerX: '50%', centerY: '0' })
+      .scale({ x: 1.15, y: 1.15, centerX: '50%', centerY: '0' }) //背景缩放效果
       .height('75%')
       .width('100%')
       .backgroundColor('#000')
@@ -108,10 +109,10 @@ export default struct Mine {
 
 @Component
 struct SongCard {
-  @Prop songs: SongItemType[] = [];
+  @Prop songs: SongItemType[] = [];   //接收父组件传递的歌曲列表
   build() {
 
-    List({ space: 12 }) {
+    List({ space: 12 }) {   //垂直列表，项间距12
       ForEach(this.songs, (item: SongItemType) => {
         ListItem() {
           Stack() {
