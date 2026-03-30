@@ -2,20 +2,33 @@ import { getSongList } from '../apis';
 import { SongItemType, SongItem } from '../models/Index';
 @Component
 export default struct Mine {
-  @State showList: [SongItemType[]] = [[]];
-  columnList: number[] = [0, 1, 2, 3];
+  @State showList: [SongItemType[]] = [[]];     //状态变量：用于存储展示的歌曲列表（二维数组）
+  columnList: number[] = [0, 1, 2, 3];        //定义网格布局的列索引
+
+  //生命周期回调
   async aboutToAppear() {
-    const songList: SongItemType[] = await getSongList() as SongItemType[];
+    const songList: SongItemType[] = await getSongList() as SongItemType[];  //异步获取歌曲列表数据
+
+    //为每列生成随机排序的歌曲列表
     this.columnList.forEach(item => {
-      this.showList[item] = songList.map(item => new SongItem(item))
-        .sort(() => Math.random() - 0.5);
+      this.showList[item] = songList
+        .map(item => new SongItem(item))
+        .sort(() => Math.random() - 0.5);   //随机排序算法，将图片打乱随机排列
     });
+    console.log('the length of showList',this.showList.length)   //调试输出列表长度4列
+    console.log('the length of showList',this.showList[0].length)  //调式输出每列的长度
+    console.log('the length of songList',songList.length)  //歌曲列表长度
   }
   build() {
     Column() {
       // 背景
       Column() {
-        GridRow({ gutter: 8 }) {
+        GridRow({
+          columns: 4,
+          gutter: {x:9, y:9}  //项之间的横向 /纵向间距
+
+        }) {
+
           ForEach(this.columnList, (item: number) => {
             GridCol({ span: 1 }) {
               SongCard({ songs: this.showList[item] })
