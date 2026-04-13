@@ -2,6 +2,7 @@ import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.Ab
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { SAFE_TOP, SAFE_BOTTOM } from '../constants';
+import AVPlayerManager from '../utils/AVPlayerManager';
 
 const DOMAIN = 0x0000;
 
@@ -55,9 +56,11 @@ export default class EntryAbility extends UIAbility {
 
       // 存储底部避让区高度
       AppStorage.setOrCreate(SAFE_BOTTOM, safeBottom);
+      AVPlayerManager.init();//新增
 
       hilog.info(DOMAIN, 'testTag', `SafeArea Set: Top=${safeTop}vp, Bottom=${safeBottom}vp`);
     });
+
   }
 
   onWindowStageDestroy(): void {
