@@ -10,6 +10,25 @@ struct Play {
   @Watch('changeAnimate')
   playState: PlayState = new PlayState();
 
+  router = this.getUIContext().getRouter();
+
+  @Builder
+  deleteButton(index: number) {
+    Button('删除')
+      .backgroundColor('#ec5c87')
+      .fontColor('#fff')
+      .width(80)
+      .height('100%')
+      .type(ButtonType.Normal)
+      .onClick(() => {
+        if (AVPlayerManager.currentSong.playList.length <= 1) {
+          this.router.back();
+        }
+        AVPlayerManager.remove(index);
+      })
+  }
+
+
   @State rotateAngle: number = 0;
   animatorResult = this.getUIContext().createAnimator({
     duration: 1000 * 15,
@@ -196,6 +215,9 @@ struct Play {
                 Image($r('app.media.ic_prev'))
                   .fillColor(Color.White)
                   .width(30)
+                  .onClick(() => { //新增
+                    AVPlayerManager.prevPlay();
+                  })
                 // “播放/暂停”按钮
                 Image(this.playState.isPlay ? $r('app.media.ic_paused') : $r('app.media.ic_play'))
                   .fillColor(Color.White)
@@ -212,6 +234,9 @@ struct Play {
                 Image($r('app.media.ic_next'))
                   .fillColor(Color.White)
                   .width(30)
+                  .onClick(() => {//新增
+                    AVPlayerManager.nextPlay();
+                  })
                 // “播放列表”按钮
                 Image($r('app.media.ic_song_list'))
                   .fillColor(Color.White)
@@ -300,6 +325,9 @@ struct Play {
                     .justifyContent(FlexAlign.Center)
                   }
                   .layoutWeight(1)
+                  .onClick(() => {
+                    AVPlayerManager.singPlay(this.playState.playList[index]);
+                  })
                   Image($r('app.media.ic_more'))
                     .width(24)
                     .height(24)
@@ -309,6 +337,7 @@ struct Play {
                 .alignItems(VerticalAlign.Center)
               }
               .border({ width: { bottom: 1 }, color: '#12ec5c87' })
+              .swipeAction({  end: this.deleteButton(index) })   //新增
             })
           }
           .layoutWeight(1)
