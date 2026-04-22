@@ -1,6 +1,7 @@
 import { media } from '@kit.MediaKit';
 import { SONG_KEY } from '../constants';
 import { PlayState, SongItemType } from '../models/Index';
+import AVSessionManager from './AVSessionManager';
 
 export default class AVPlayerManager {
   static player: media.AVPlayer;//静态属性
@@ -20,6 +21,8 @@ export default class AVPlayerManager {
       } else {
         // 删除歌曲后，播放列表中已经没有歌曲了，重置播放器
         AVPlayerManager.currentSong = new PlayState();
+        AVSessionManager.reset(); //新增
+
       }
     } else {
       // 判断要删除的歌曲是否在当前正在播放的歌曲的前面
@@ -35,6 +38,7 @@ export default class AVPlayerManager {
 
 
   static async init() {//静态方法
+
     if (!AVPlayerManager.player) {
       // 创建AVPlayer实例
       AVPlayerManager.player = await media.createAVPlayer();
@@ -60,8 +64,10 @@ export default class AVPlayerManager {
     AVPlayerManager.player.on('timeUpdate', (time: number) => {
       AVPlayerManager.currentSong.time = time;
       AppStorage.setOrCreate(SONG_KEY, AVPlayerManager.currentSong); //
-
+      AVSessionManager.setAVPlaybackState();
+      AVSessionManager.setAVMetadata(AVPlayerManager.currentSong.playList[AVPlayerManager.currentSong.playIndex]); //新增
     });
+
 
   }
   // 播放指定歌曲并将该歌曲添加到播放列表
@@ -87,7 +93,7 @@ export default class AVPlayerManager {
     }
     // 更新AppStorage中的SONG_KEY数据
     AppStorage.setOrCreate(SONG_KEY, AVPlayerManager.currentSong);
-
+    AVSessionManager.setAVPlaybackState(); //新增
   }
   // 切换当前播放的歌曲
   static async changePlay() {
@@ -106,7 +112,7 @@ export default class AVPlayerManager {
     AVPlayerManager.player.pause();
     AVPlayerManager.currentSong.isPlay =  false;
     AppStorage.setOrCreate(SONG_KEY, AVPlayerManager.currentSong);
-
+    AVSessionManager.setAVPlaybackState();
   }
 
   static prevPlay() {

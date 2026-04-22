@@ -3,6 +3,7 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { SAFE_TOP, SAFE_BOTTOM } from '../constants';
 import AVPlayerManager from '../utils/AVPlayerManager';
+import AVSessionManager from '../utils/AVSessionManager';
 
 const DOMAIN = 0x0000;
 
@@ -57,6 +58,8 @@ export default class EntryAbility extends UIAbility {
       // 存储底部避让区高度
       AppStorage.setOrCreate(SAFE_BOTTOM, safeBottom);
       AVPlayerManager.init();//新增
+      AVSessionManager.init(this.context);
+
 
       hilog.info(DOMAIN, 'testTag', `SafeArea Set: Top=${safeTop}vp, Bottom=${safeBottom}vp`);
     });
